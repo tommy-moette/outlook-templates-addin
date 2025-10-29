@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Email Templates</title>
+    
+    <script src="https://appsforoffice.microsoft.com/lib/1/hosted/office.js"></script>
+    <script src="https://alcdn.msauth.net/browser/2.14.2/js/msal-browser.min.js"></script>
+    
+    <style>
+        body {
+            font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+            padding: 20px;
+            margin: 0;
+            background: #f3f2f1;
+        }
+        
+        h2 {
+            color: #323130;
+            font-size: 18px;
+            margin-top: 0;
+        }
+        
+        #templates-list {
+            list-style: none;
+            padding: 0;
+            margin: 20px 0;
+        }
+        
+        .template-item {
+            background: white;
+            border: 1px solid #edebe9;
+            border-radius: 4px;
+            padding: 12px;
+            margin-bottom: 10px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .template-item:hover {
+            border-color: #0078d4;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .template-name {
+            font-weight: 600;
+            color: #323130;
+            margin-bottom: 4px;
+        }
+        
+        .template-desc {
+            font-size: 12px;
+            color: #605e5c;
+        }
+        
+        .btn {
+            background: #0078d4;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            width: 100%;
+            margin-top: 10px;
+        }
+        
+        .btn:hover {
+            background: #106ebe;
+        }
+        
+        .btn:disabled {
+            background: #c8c6c4;
+            cursor: not-allowed;
+        }
+        
+        #status {
+            padding: 10px;
+            border-radius: 4px;
+            margin-top: 10px;
+            font-size: 13px;
+            display: none;
+        }
+        
+        .success {
+            background: #dff6dd;
+            color: #107c10;
+            border: 1px solid #107c10;
+        }
+        
+        .error {
+            background: #fde7e9;
+            color: #a80000;
+            border: 1px solid #a80000;
+        }
+        
+        .loading {
+            text-align: center;
+            color: #605e5c;
+            padding: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h2>📧 Email Templates</h2>
+    <button id="login-btn" class="btn">Sign in to SharePoint</button>
+    <div id="loading" class="loading" style="display: none;">Loading templates...</div>
+    <ul id="templates-list"></ul>
+    <div id="status"></div>
+    
+    <script src="taskpane.js"></script>
+</body>
+</html>
