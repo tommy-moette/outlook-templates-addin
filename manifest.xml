@@ -5,17 +5,17 @@
            xsi:type="MailApp">
   
   <Id>5c5ce84e-ccf2-4ec6-bc60-85b61718472f</Id>
-  <Version>1.0.8.0</Version>
+  <Version>1.0.9.0</Version>
   <ProviderName>Moette i Garderoben AB</ProviderName>
   <DefaultLocale>en-US</DefaultLocale>
   <DisplayName DefaultValue="Mail template"/>
   <Description DefaultValue="Insert email templates from SharePoint"/>
-  <IconUrl DefaultValue="https://www.inseab.se/inse/slask.nsf/31e8f49a46046852c125790d002f18fa/84e9c46ba57bcd81c1258d3100539b73/$FILE/icon-32.png"/>
-  <HighResolutionIconUrl DefaultValue="https://www.inseab.se/inse/slask.nsf/31e8f49a46046852c125790d002f18fa/84e9c46ba57bcd81c1258d3100539b73/$FILE/icon-32.png"/>
-  <SupportUrl DefaultValue="https://www.inseab.se"/>
+  <IconUrl DefaultValue="https://gray-desert-02be92c03.3.azurestaticapps.net/icon-32.png"/>
+  <HighResolutionIconUrl DefaultValue="https://gray-desert-02be92c03.3.azurestaticapps.net/icon-32.png"/>
+  <SupportUrl DefaultValue="https://gray-desert-02be92c03.3.azurestaticapps.net"/>
   
   <AppDomains>
-    <AppDomain>https://www.inseab.se/</AppDomain>
+    <AppDomain>https://gray-desert-02be92c03.3.azurestaticapps.net</AppDomain>
   </AppDomains>
   
   <Hosts>
@@ -31,7 +31,7 @@
   <FormSettings>
     <Form xsi:type="ItemRead">
       <DesktopSettings>
-        <SourceLocation DefaultValue="https://www.inseab.se/inse/slask.nsf/31e8f49a46046852c125790d002f18fa/6305679cb98474dec1258d30005bd8a6/$FILE/taskpane.html"/>
+        <SourceLocation DefaultValue="https://gray-desert-02be92c03.3.azurestaticapps.net/taskpane.html"/>
         <RequestedHeight>250</RequestedHeight>
       </DesktopSettings>
     </Form>
@@ -84,12 +84,12 @@
     
     <Resources>
       <bt:Images>
-        <bt:Image id="Icon.16x16" DefaultValue="https://www.inseab.se/inse/slask.nsf/31e8f49a46046852c125790d002f18fa/08c54f90547fb51dc1258d3100539696/$FILE/icon-16.png"/>
-        <bt:Image id="Icon.32x32" DefaultValue="https://www.inseab.se/inse/slask.nsf/31e8f49a46046852c125790d002f18fa/84e9c46ba57bcd81c1258d3100539b73/$FILE/icon-32.png"/>
-        <bt:Image id="Icon.80x80" DefaultValue="https://www.inseab.se/inse/slask.nsf/31e8f49a46046852c125790d002f18fa/7bbe9a515f7c2903c1258d310053a02f/$FILE/icon-80.png"/>
+        <bt:Image id="Icon.16x16" DefaultValue="https://gray-desert-02be92c03.3.azurestaticapps.net/icon-16.png"/>
+        <bt:Image id="Icon.32x32" DefaultValue="https://gray-desert-02be92c03.3.azurestaticapps.net/icon-32.png"/>
+        <bt:Image id="Icon.80x80" DefaultValue="https://gray-desert-02be92c03.3.azurestaticapps.net/icon-80.png"/>
       </bt:Images>
       <bt:Urls>
-        <bt:Url id="Taskpane.Url" DefaultValue="https://www.inseab.se/inse/slask.nsf/31e8f49a46046852c125790d002f18fa/6305679cb98474dec1258d30005bd8a6/$FILE/taskpane.html"/>
+        <bt:Url id="Taskpane.Url" DefaultValue="https://gray-desert-02be92c03.3.azurestaticapps.net/taskpane.html"/>
       </bt:Urls>
       <bt:ShortStrings>
         <bt:String id="GroupLabel" DefaultValue="Mail templates"/>
