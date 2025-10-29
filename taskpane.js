@@ -3,7 +3,7 @@ const msalConfig = {
     auth: {
         clientId: "ca529e3c-88b4-4db3-aacb-514f2882b081", // Register app in Azure AD
         authority: "https://login.microsoftonline.com/c0ae7a25-3b55-401b-8a09-f431d96e686f",
-        redirectUri: "https://www.inseab.se/inse/slask.nsf/31e8f49a46046852c125790d002f18fa/6305679cb98474dec1258d30005bd8a6/$FILE/taskpane.html"
+        redirectUri: "https://gray-desert-02be92c03.3.azurestaticapps.net/taskpane.html"
     },
     cache: {
         cacheLocation: "sessionStorage",
