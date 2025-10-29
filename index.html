@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Outlook Email Templates Add-in</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+        }
+        
+        .container {
+            text-align: center;
+            padding: 60px 40px;
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 20px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            max-width: 600px;
+        }
+        
+        .icon {
+            font-size: 80px;
+            margin-bottom: 20px;
+        }
+        
+        h1 {
+            font-size: 32px;
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+        
+        p {
+            font-size: 18px;
+            line-height: 1.6;
+            margin-bottom: 15px;
+            opacity: 0.9;
+        }
+        
+        .status {
+            margin-top: 30px;
+            padding: 15px 30px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 10px;
+            display: inline-block;
+        }
+        
+        .status-badge {
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            background: #4ade80;
+            border-radius: 50%;
+            margin-right: 8px;
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+        
+        .info {
+            margin-top: 40px;
+            padding-top: 30px;
+            border-top: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .info p {
+            font-size: 14px;
+            opacity: 0.7;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="icon">📧</div>
+        <h1>Outlook Email Templates Add-in</h1>
+        <p>This is a Microsoft Outlook Add-in for managing email templates.</p>
+        <p>The add-in is designed to be used within Microsoft Outlook.</p>
+        
+        <div class="status">
+            <span class="status-badge"></span>
+            <span>Add-in is deployed and ready</span>
+        </div>
+        
+        <div class="info">
+            <p>To use this add-in:</p>
+            <p>1. Open Microsoft Outlook (Web or Desktop)</p>
+            <p>2. Compose a new email</p>
+            <p>3. Click "Insert Template" in the ribbon</p>
+        </div>
+    </div>
+</body>
+</html>
