@@ -22,7 +22,7 @@ const loginRequest = {
 
 // SharePoint configuration
 const SHAREPOINT_SITE = "https://mo1e.sharepoint.com/sites/EmailTemplates";
-const TEMPLATES_FOLDER = "/Delade dokument/EmailTemplates";
+const TEMPLATES_FOLDER = "/Shared Documents/EmailTemplates";
 
 let msalInstance;
 let accessToken = null;
@@ -89,9 +89,7 @@ async function loadTemplates() {
 
     try {
         // 1. Hämta site-id för SharePoint-siten
-
-
-        const siteResponse = await fetch("https://graph.microsoft.com/v1.0/sites/mo1e.sharepoint.com:/sites/EmailTemplates", {
+        const filesResponse = await fetch(`https://graph.microsoft.com/v1.0/sites/${siteId}/drive/root:/${folderPath}:/children`, {
             headers: {
                 Authorization: `Bearer ${accessToken}`
             }
