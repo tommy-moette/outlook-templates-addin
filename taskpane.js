@@ -88,7 +88,7 @@ async function loadTemplates() {
         const siteId = siteData.id;
 
         // 2. Get files from folder
-        const folderPath = "Shared Documents/EmailTemplates";
+        const folderPath = "01ZTYGZROGB3NR3JVFEFELH72IFM4ZGSJU";
         const filesResponse = await fetch(`https://graph.microsoft.com/v1.0/sites/${siteId}/drive/root:/${folderPath}:/children`, {
             headers: {
                 Authorization: `Bearer ${accessToken}`
