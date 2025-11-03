@@ -16,7 +16,7 @@ const msalConfig = {
 //};
 
 const loginRequest = {
-    scopes: ["https://mo1e.sharepoint.com/.default"]
+    scopes: ["Files.Read.All", "Sites.Read.All"]
 };
 
 
@@ -79,56 +79,7 @@ async function getAccessToken() {
 }
 console.log("Access token:", accessToken);
 
-async function xxxloadTemplates() {
-    const templatesList = document.getElementById("templates-list");
-    const loading = document.getElementById("loading");
-    
-    templatesList.innerHTML = "";
-    loading.style.display = "block";
-    
-    try {
-        // Get files from SharePoint folder
-        const siteUrl = `${SHAREPOINT_SITE}/_api/web/GetFolderByServerRelativeUrl('${TEMPLATES_FOLDER}')/Files`;
-        
-        const response = await fetch(siteUrl, {
-            headers: {
-                "Authorization": `Bearer ${accessToken}`,
-                "Accept": "application/json;odata=verbose"
-            }
-        });
-        
-        if (!response.ok) {
-            throw new Error("Failed to fetch templates");
-        }
-        
-        const data = await response.json();
-        const templates = data.d.results.filter(file => 
-            file.Name.endsWith('.html') || file.Name.endsWith('.htm')
-        );
-        
-        loading.style.display = "none";
-        
-        if (templates.length === 0) {
-            templatesList.innerHTML = '<li style="padding: 20px; text-align: center; color: #605e5c;">No templates found</li>';
-            return;
-        }
-        
-        templates.forEach(template => {
-            const li = document.createElement("li");
-            li.className = "template-item";
-            li.innerHTML = `
-                <div class="template-name">${template.Name.replace(/\.(html|htm)$/, '')}</div>
-                <div class="template-desc">Click to insert</div>
-            `;
-            li.onclick = () => insertTemplate(template.ServerRelativeUrl);
-            templatesList.appendChild(li);
-        });
-        
-    } catch (error) {
-        loading.style.display = "none";
-        showStatus("Error loading templates: " + error.message, "error");
-    }
-}
+
 async function loadTemplates() {
     const templatesList = document.getElementById("templates-list");
     const loading = document.getElementById("loading");
@@ -212,41 +163,6 @@ async function insertTemplate(downloadUrl) {
                 }
             }
         );
-    } catch (error) {
-        showStatus("Error: " + error.message, "error");
-    }
-}
-
-async function xxx_insertTemplate(fileUrl) {
-    try {
-        // Fetch template content
-        const downloadUrl = `${SHAREPOINT_SITE}/_api/web/GetFileByServerRelativeUrl('${fileUrl}')/$value`;
-        
-        const response = await fetch(downloadUrl, {
-            headers: {
-                "Authorization": `Bearer ${accessToken}`
-            }
-        });
-        
-        if (!response.ok) {
-            throw new Error("Failed to fetch template content");
-        }
-        
-        const htmlContent = await response.text();
-        
-        // Insert into email
-        Office.context.mailbox.item.body.setAsync(
-            htmlContent,
-            { coercionType: Office.CoercionType.Html },
-            (result) => {
-                if (result.status === Office.AsyncResultStatus.Succeeded) {
-                    showStatus("✓ Template inserted successfully!", "success");
-                } else {
-                    showStatus("Error inserting template: " + result.error.message, "error");
-                }
-            }
-        );
-        
     } catch (error) {
         showStatus("Error: " + error.message, "error");
     }
