@@ -5,11 +5,11 @@
            xsi:type="MailApp">
   
   <Id>5c5ce84e-ccf2-4ec6-bc60-85b61718472f</Id>
-  <Version>1.0.9.0</Version>
+  <Version>1.0.11.0</Version>
   <ProviderName>Moette i Garderoben AB</ProviderName>
   <DefaultLocale>en-US</DefaultLocale>
-  <DisplayName DefaultValue="Mail template"/>
-  <Description DefaultValue="Insert email templates from SharePoint"/>
+  <DisplayName DefaultValue="eMail templates"/>
+  <Description DefaultValue="Insert email templates"/>
   <IconUrl DefaultValue="https://gray-desert-02be92c03.3.azurestaticapps.net/icon-32.png"/>
   <HighResolutionIconUrl DefaultValue="https://gray-desert-02be92c03.3.azurestaticapps.net/icon-32.png"/>
   <SupportUrl DefaultValue="https://gray-desert-02be92c03.3.azurestaticapps.net"/>
