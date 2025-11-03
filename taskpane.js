@@ -1,7 +1,7 @@
-// Configuration - Update these values
+// Configuration
 const msalConfig = {
     auth: {
-        clientId: "ca529e3c-88b4-4db3-aacb-514f2882b081", // Register app in Azure AD
+        clientId: "ca529e3c-88b4-4db3-aacb-514f2882b081",
         authority: "https://login.microsoftonline.com/c0ae7a25-3b55-401b-8a09-f431d96e686f",
         redirectUri: "https://gray-desert-02be92c03.3.azurestaticapps.net/taskpane.html"
     },
@@ -11,18 +11,9 @@ const msalConfig = {
     }
 };
 
-//const loginRequest = {
-//    scopes: ["Files.Read.All", "Sites.Read.All"]
-//};
-
 const loginRequest = {
     scopes: ["Files.Read.All", "Sites.Read.All"]
 };
-
-
-// SharePoint configuration
-const SHAREPOINT_SITE = "https://mo1e.sharepoint.com/sites/EmailTemplates";
-const TEMPLATES_FOLDER = "/Shared Documents/EmailTemplates";
 
 let msalInstance;
 let accessToken = null;
@@ -30,10 +21,7 @@ let accessToken = null;
 Office.onReady((info) => {
     if (info.host === Office.HostType.Outlook) {
         msalInstance = new msal.PublicClientApplication(msalConfig);
-        
         document.getElementById("login-btn").onclick = signIn;
-        
-        // Check if already signed in
         checkAuthState();
     }
 });
@@ -62,10 +50,8 @@ async function signIn() {
 
 async function getAccessToken() {
     const account = msalInstance.getActiveAccount();
-    if (!account) {
-        throw new Error("No active account");
-    }
-    
+    if (!account) throw new Error("No active account");
+
     try {
         const response = await msalInstance.acquireTokenSilent({
             ...loginRequest,
@@ -77,8 +63,6 @@ async function getAccessToken() {
         accessToken = response.accessToken;
     }
 }
-console.log("Access token:", accessToken);
-
 
 async function loadTemplates() {
     const templatesList = document.getElementById("templates-list");
@@ -88,29 +72,33 @@ async function loadTemplates() {
     loading.style.display = "block";
 
     try {
-        // 1. Hämta site-id för SharePoint-siten
-        const filesResponse = await fetch(`https://graph.microsoft.com/v1.0/sites/${siteId}/drive/root:/${folderPath}:/children`, {
+        // 1. Get site ID
+        const siteResponse = await fetch("https://graph.microsoft.com/v1.0/sites/mo1e.sharepoint.com:/sites/EmailTemplates", {
             headers: {
                 Authorization: `Bearer ${accessToken}`
             }
         });
-        
+
         if (!siteResponse.ok) {
             const errorText = await siteResponse.text();
             throw new Error(`Failed to get site ID: ${siteResponse.status} ${siteResponse.statusText} - ${errorText}`);
         }
-        
+
         const siteData = await siteResponse.json();
-        console.log("Site data:", siteData); // Lägg till denna för felsökning
         const siteId = siteData.id;
 
-        // 2. Hämta filer i mappen "Delade dokument/EmailTemplates"
-        const folderPath = "Delade dokument/EmailTemplates";
+        // 2. Get files from folder
+        const folderPath = "Shared Documents/EmailTemplates";
         const filesResponse = await fetch(`https://graph.microsoft.com/v1.0/sites/${siteId}/drive/root:/${folderPath}:/children`, {
             headers: {
                 Authorization: `Bearer ${accessToken}`
             }
         });
+
+        if (!filesResponse.ok) {
+            const errorText = await filesResponse.text();
+            throw new Error(`Failed to get files: ${filesResponse.status} ${filesResponse.statusText} - ${errorText}`);
+        }
 
         const filesData = await filesResponse.json();
         const templates = filesData.value.filter(file =>
@@ -171,7 +159,7 @@ function showStatus(message, type) {
     status.textContent = message;
     status.className = type;
     status.style.display = "block";
-    
+
     setTimeout(() => {
         status.style.display = "none";
     }, 4000);
