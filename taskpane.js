@@ -11,9 +11,14 @@ const msalConfig = {
     }
 };
 
+//const loginRequest = {
+//    scopes: ["Files.Read.All", "Sites.Read.All"]
+//};
+
 const loginRequest = {
-    scopes: ["Files.Read.All", "Sites.Read.All"]
+    scopes: ["https://mo1e.sharepoint.com/.default"]
 };
+
 
 // SharePoint configuration
 const SHAREPOINT_SITE = "https://mo1e.sharepoint.com/sites/EmailTemplates";
@@ -72,6 +77,7 @@ async function getAccessToken() {
         accessToken = response.accessToken;
     }
 }
+console.log("Access token:", accessToken);
 
 async function loadTemplates() {
     const templatesList = document.getElementById("templates-list");
