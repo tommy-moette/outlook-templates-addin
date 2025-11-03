@@ -79,7 +79,7 @@ async function getAccessToken() {
 }
 console.log("Access token:", accessToken);
 
-async function loadTemplates() {
+async function xxxloadTemplates() {
     const templatesList = document.getElementById("templates-list");
     const loading = document.getElementById("loading");
     
@@ -129,8 +129,87 @@ async function loadTemplates() {
         showStatus("Error loading templates: " + error.message, "error");
     }
 }
+async function loadTemplates() {
+    const templatesList = document.getElementById("templates-list");
+    const loading = document.getElementById("loading");
 
-async function insertTemplate(fileUrl) {
+    templatesList.innerHTML = "";
+    loading.style.display = "block";
+
+    try {
+        // 1. Hämta site-id för SharePoint-siten
+        const siteResponse = await fetch("https://graph.microsoft.com/v1.0/sites/mo1e.sharepoint.com:/sites/EmailTemplates", {
+            headers: {
+                Authorization: `Bearer ${accessToken}`
+            }
+        });
+
+        const siteData = await siteResponse.json();
+        const siteId = siteData.id;
+
+        // 2. Hämta filer i mappen "Delade dokument/EmailTemplates"
+        const folderPath = "Delade dokument/EmailTemplates";
+        const filesResponse = await fetch(`https://graph.microsoft.com/v1.0/sites/${siteId}/drive/root:/${folderPath}:/children`, {
+            headers: {
+                Authorization: `Bearer ${accessToken}`
+            }
+        });
+
+        const filesData = await filesResponse.json();
+        const templates = filesData.value.filter(file =>
+            file.name.endsWith('.html') || file.name.endsWith('.htm')
+        );
+
+        loading.style.display = "none";
+
+        if (templates.length === 0) {
+            templatesList.innerHTML = '<li style="padding: 20px; text-align: center; color: #605e5c;">No templates found</li>';
+            return;
+        }
+
+        templates.forEach(template => {
+            const li = document.createElement("li");
+            li.className = "template-item";
+            li.innerHTML = `
+                <div class="template-name">${template.name.replace(/\.(html|htm)$/, '')}</div>
+                <div class="template-desc">Click to insert</div>
+            `;
+            li.onclick = () => insertTemplate(template['@microsoft.graph.downloadUrl']);
+            templatesList.appendChild(li);
+        });
+
+    } catch (error) {
+        loading.style.display = "none";
+        showStatus("Error loading templates: " + error.message, "error");
+    }
+}
+
+async function insertTemplate(downloadUrl) {
+    try {
+        const response = await fetch(downloadUrl);
+        if (!response.ok) {
+            throw new Error("Failed to fetch template content");
+        }
+
+        const htmlContent = await response.text();
+
+        Office.context.mailbox.item.body.setAsync(
+            htmlContent,
+            { coercionType: Office.CoercionType.Html },
+            (result) => {
+                if (result.status === Office.AsyncResultStatus.Succeeded) {
+                    showStatus("✓ Template inserted successfully!", "success");
+                } else {
+                    showStatus("Error inserting template: " + result.error.message, "error");
+                }
+            }
+        );
+    } catch (error) {
+        showStatus("Error: " + error.message, "error");
+    }
+}
+
+async function xxx_insertTemplate(fileUrl) {
     try {
         // Fetch template content
         const downloadUrl = `${SHAREPOINT_SITE}/_api/web/GetFileByServerRelativeUrl('${fileUrl}')/$value`;
