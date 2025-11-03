@@ -17,7 +17,7 @@ const loginRequest = {
 
 // SharePoint configuration
 const SHAREPOINT_SITE = "https://mo1e.sharepoint.com/sites/EmailTemplates";
-const TEMPLATES_FOLDER = "/Shared Documents/EmailTemplates";
+const TEMPLATES_FOLDER = "/Delade dokument/EmailTemplates";
 
 let msalInstance;
 let accessToken = null;
