@@ -138,13 +138,21 @@ async function loadTemplates() {
 
     try {
         // 1. Hämta site-id för SharePoint-siten
+
+
         const siteResponse = await fetch("https://graph.microsoft.com/v1.0/sites/mo1e.sharepoint.com:/sites/EmailTemplates", {
             headers: {
                 Authorization: `Bearer ${accessToken}`
             }
         });
-
+        
+        if (!siteResponse.ok) {
+            const errorText = await siteResponse.text();
+            throw new Error(`Failed to get site ID: ${siteResponse.status} ${siteResponse.statusText} - ${errorText}`);
+        }
+        
         const siteData = await siteResponse.json();
+        console.log("Site data:", siteData); // Lägg till denna för felsökning
         const siteId = siteData.id;
 
         // 2. Hämta filer i mappen "Delade dokument/EmailTemplates"
