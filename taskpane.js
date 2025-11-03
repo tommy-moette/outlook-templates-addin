@@ -89,7 +89,8 @@ async function loadTemplates() {
 
         // 2. Get files from folder
         const folderPath = "01ZTYGZROGB3NR3JVFEFELH72IFM4ZGSJU";
-        const filesResponse = await fetch(`https://graph.microsoft.com/v1.0/sites/${siteId}/drive/root:/${folderPath}:/children`, {
+        const folderId = "01ZTYGZROGB3NR3JVFEFELH72IFM4ZGSJU";
+        const filesResponse = await fetch(`https://graph.microsoft.com/v1.0/sites/${siteId}/drive/items/${folderId}/children`, {
             headers: {
                 Authorization: `Bearer ${accessToken}`
             }
