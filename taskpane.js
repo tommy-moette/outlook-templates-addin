@@ -1,3 +1,6 @@
+
+
+
 // Configuration
 const msalConfig = {
     auth: {
@@ -64,7 +67,75 @@ async function getAccessToken() {
     }
 }
 
+
 async function loadTemplates() {
+    const templatesList = document.getElementById("templates-list");
+    const loading = document.getElementById("loading");
+
+    templatesList.innerHTML = "";
+    loading.style.display = "block";
+
+    try {
+        const mailboxAddress = Office.context.mailbox.item.from.emailAddress;
+        const mailboxName = mailboxAddress.split('@')[0];
+        const sitePath = `/sites/${mailboxName}`;
+
+        // 1. Hämta siteId dynamiskt
+        const siteResponse = await fetch(`https://graph.microsoft.com/v1.0/sites/mo1e.sharepoint.com:${sitePath}`, {
+            headers: { Authorization: `Bearer ${accessToken}` }
+        });
+
+        if (!siteResponse.ok) {
+            loading.style.display = "none";
+            showStatus(`Ingen site hittades för ${mailboxAddress}. Kontakta admin för att skapa en site.`, "error");
+            return;
+        }
+
+        const siteData = await siteResponse.json();
+        const siteId = siteData.id;
+
+        // 2. Hämta mappen EmailTemplates
+        const folderPath = "Shared Documents/EmailTemplates";
+        const filesResponse = await fetch(`https://graph.microsoft.com/v1.0/sites/${siteId}/drive/root:/${folderPath}:/children`, {
+            headers: { Authorization: `Bearer ${accessToken}` }
+        });
+
+        if (!filesResponse.ok) {
+            loading.style.display = "none";
+            showStatus(`Ingen mapp hittades för ${mailboxAddress}.`, "error");
+            return;
+        }
+
+        const filesData = await filesResponse.json();
+        const templates = filesData.value.filter(file =>
+            file.name.endsWith('.html') || file.name.endsWith('.htm')
+        );
+
+        loading.style.display = "none";
+
+        if (templates.length === 0) {
+            templatesList.innerHTML = '<li style="padding: 20px; text-align: center; color: #605e5c;">Inga mallar hittades</li>';
+            return;
+        }
+
+        templates.forEach(template => {
+            const li = document.createElement("li");
+            li.className = "template-item";
+            li.innerHTML = `
+                <div class="template-name">${template.name.replace(/\.(html|htm)$/, '')}</div>
+                <div class="template-desc">Click to insert</div>
+            `;
+            li.onclick = () => insertTemplate(template['@microsoft.graph.downloadUrl']);
+            templatesList.appendChild(li);
+        });
+
+    } catch (error) {
+        loading.style.display = "none";
+        showStatus("Error loading templates: " + error.message, "error");
+    }
+}
+
+async function old_loadTemplates() {
     const templatesList = document.getElementById("templates-list");
     const loading = document.getElementById("loading");
 
