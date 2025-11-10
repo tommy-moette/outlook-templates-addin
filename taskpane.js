@@ -76,7 +76,8 @@ async function loadTemplates() {
     loading.style.display = "block";
 
     try {
-        const mailboxAddress = Office.context.mailbox.item.from.emailAddress;
+       
+        const mailboxAddress = Office.context.mailbox.item.from?.emailAddress || Office.context.mailbox.userProfile.emailAddress;
         const mailboxName = mailboxAddress.split('@')[0];
         const sitePath = `/sites/${mailboxName}`;
 
