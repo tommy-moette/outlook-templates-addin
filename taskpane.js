@@ -68,7 +68,7 @@ async function getAccessToken() {
 }
 
 
-async function loadTemplates() {
+async function xloadTemplates() {
     const templatesList = document.getElementById("templates-list");
     const loading = document.getElementById("loading");
 
@@ -136,7 +136,7 @@ async function loadTemplates() {
     }
 }
 
-async function old_loadTemplates() {
+async function loadTemplates() {
     const templatesList = document.getElementById("templates-list");
     const loading = document.getElementById("loading");
 
