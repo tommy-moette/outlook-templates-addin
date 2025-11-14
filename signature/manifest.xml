@@ -12,8 +12,8 @@
 
   <DisplayName DefaultValue="Signature Manager"/>
   <Description DefaultValue="Create, edit and manage email signatures"/>
-  <IconUrl DefaultValue="https://gray-desert-02be92c03.3.azurestaticapps.net/signature-icon-32.png"/>
-  <HighResolutionIconUrl DefaultValue="gray-desert-02be92c03.3.azurestaticapps.net/signature-icon-64.png"/>
+  <IconUrl DefaultValue="https://gray-desert-02be92c03.3.azurestaticapps.net/sicon-32.png"/>
+  <HighResolutionIconUrl DefaultValue="gray-desert-02be92c03.3.azurestaticapps.net/icon-64.png"/>
   <SupportUrl DefaultValue="https://gray-desert-02be92c03.3.azurestaticapps.net"/>
 
   <AppDomains>
@@ -75,9 +75,9 @@
 
     <Resources>
       <bt:Images>
-        <bt:Image id="Icon.16x16" DefaultValue="https://gray-desert-02be92c03.3.azurestaticapps.net/signature-icon-16.png"/>
-        <bt:Image id="Icon.32x32" DefaultValue="https://gray-desert-02be92c03.3.azurestaticapps.net/signature-icon-32.png"/>
-        <bt:Image id="Icon.80x80" DefaultValue="https://gray-desert-02be92c03.3.azurestaticapps.net/signature-icon-80.png"/>
+        <bt:Image id="Icon.16x16" DefaultValue="https://gray-desert-02be92c03.3.azurestaticapps.net/icon-16.png"/>
+        <bt:Image id="Icon.32x32" DefaultValue="https://gray-desert-02be92c03.3.azurestaticapps.net/icon-32.png"/>
+        <bt:Image id="Icon.80x80" DefaultValue="https://gray-desert-02be92c03.3.azurestaticapps.net/icon-80.png"/>
       </bt:Images>
       <bt:Urls>
         <bt:Url id="Commands.Url" DefaultValue="https://gray-desert-02be92c03.3.azurestaticapps.net/signature/commands.html"/>
