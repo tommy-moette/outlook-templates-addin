@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Signaturhanterare</title>
+    
+    <!-- Office.js -->
+    <script type="text/javascript" src="https://appsforoffice.microsoft.com/lib/1/hosted/office.js"></script>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+        }
+    </style>
+</head>
+<body>
+    <div id="app"></div>
+    
+    <script type="text/javascript">
+        Office.onReady((info) => {
+            if (info.host === Office.HostType.Outlook) {
+                console.log('Office.js initialiserad');
+                initApp();
+            }
+        });
+        
+        function initApp() {
+            const app = document.getElementById('app');
+            let signatures = [];
+            let activeSignatureId = null;
+            let editingId = null;
+            let showCreate = false;
+            
+            // Ladda signaturer från roaming settings
+            function loadSignatures() {
+                try {
+                    const data = Office.context.roamingSettings.get("signatures");
+                    signatures = data || [];
+                    activeSignatureId = Office.context.roamingSettings.get("activeSignature");
+                    render();
+                } catch (err) {
+                    console.error('Kunde inte ladda signaturer:', err);
+                    render();
+                }
+            }
+            
+            // Spara signaturer
+            function saveSignatures(callback) {
+                try {
+                    Office.context.roamingSettings.set("signatures", signatures);
+                    Office.context.roamingSettings.set("activeSignature", activeSignatureId);
+                    Office.context.roamingSettings.saveAsync((result) => {
+                        if (result.status === Office.AsyncResultStatus.Succeeded) {
+                            console.log('Signaturer sparade');
+                            if (callback) callback(true);
+                        } else {
+                            console.error('Kunde inte spara:', result.error);
+                            if (callback) callback(false);
+                        }
+                    });
+                } catch (err) {
+                    console.error('Fel vid sparning:', err);
+                    if (callback) callback(false);
+                }
+            }
+            
+            // Skapa signatur
+            function createSignature(name, content) {
+                const newSig = {
+                    id: Date.now().toString(),
+                    name: name,
+                    content: content,
+                    created: new Date().toISOString()
+                };
+                signatures.push(newSig);
+                saveSignatures(() => {
+                    showCreate = false;
+                    render();
+                });
+            }
+            
+            // Uppdatera signatur
+            function updateSignature(id, name, content) {
+                const index = signatures.findIndex(s => s.id === id);
+                if (index !== -1) {
+                    signatures[index] = {
+                        ...signatures[index],
+                        name: name,
+                        content: content
+                    };
+                    saveSignatures(() => {
+                        editingId = null;
+                        render();
+                    });
+                }
+            }
+            
+            // Ta bort signatur
+            function deleteSignature(id) {
+                if (!confirm('Är du säker på att du vill ta bort denna signatur?')) return;
+                
+                signatures = signatures.filter(s => s.id !== id);
+                if (activeSignatureId === id) {
+                    activeSignatureId = null;
+                }
+                saveSignatures(() => render());
+            }
+            
+            // Aktivera signatur
+            function activateSignature(id) {
+                const sig = signatures.find(s => s.id === id);
+                if (!sig) return;
+                
+                // Kontrollera att vi är i compose-läge
+                if (Office.context.mailbox.item.itemType !== Office.MailboxEnums.ItemType.Message) {
+                    alert('Signaturer kan endast aktiveras när du skriver ett nytt mail.');
+                    return;
+                }
+                
+                Office.context.mailbox.item.body.setSignatureAsync(
+                    sig.content,
+                    { coercionType: Office.CoercionType.Html },
+                    (result) => {
+                        if (result.status === Office.AsyncResultStatus.Succeeded) {
+                            activeSignatureId = id;
+                            saveSignatures(() => {
+                                alert(`Signatur "${sig.name}" aktiverad!`);
+                                render();
+                            });
+                        } else {
+                            alert('Kunde inte aktivera signatur: ' + result.error.message);
+                        }
+                    }
+                );
+            }
+            
+            // Render funktionen
+            function render() {
+                app.innerHTML = `
+                    <div class="min-h-screen bg-gray-50 p-4">
+                        <div class="max-w-2xl mx-auto">
+                            <div class="bg-white rounded-lg shadow-sm p-4 mb-4">
+                                <div class="flex justify-between items-center mb-4">
+                                    <h1 class="text-xl font-bold text-gray-800">Signaturhanterare</h1>
+                                    <button onclick="toggleCreate()" class="px-3 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 text-sm">
+                                        ${showCreate ? 'Avbryt' : '+ Ny signatur'}
+                                    </button>
+                                </div>
+                                
+                                ${showCreate || editingId ? renderForm() : ''}
+                            </div>
+                            
+                            <div class="space-y-3">
+                                ${signatures.length === 0 ? `
+                                    <div class="bg-white rounded-lg shadow-sm p-6 text-center">
+                                        <p class="text-gray-500">Inga signaturer skapade än.</p>
+                                    </div>
+                                ` : signatures.map(sig => renderSignature(sig)).join('')}
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }
+            
+            function renderForm() {
+                const editing = editingId ? signatures.find(s => s.id === editingId) : null;
+                return `
+                    <div class="border border-gray-200 rounded-lg p-4 bg-gray-50">
+                        <h3 class="font-semibold mb-3">${editing ? 'Redigera' : 'Skapa ny'} signatur</h3>
+                        <div class="space-y-3">
+                            <div>
+                                <label class="block text-sm font-medium mb-1">Namn</label>
+                                <input type="text" id="sigName" value="${editing ? editing.name : ''}" 
+                                    class="w-full px-3 py-2 border rounded-lg" placeholder="T.ex. Standard">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium mb-1">HTML-innehåll</label>
+                                <textarea id="sigContent" rows="5" 
+                                    class="w-full px-3 py-2 border rounded-lg font-mono text-sm"
+                                    placeholder="<div>Ditt namn<br/>Din titel</div>">${editing ? editing.content : ''}</textarea>
+                            </div>
+                            <div class="flex gap-2">
+                                <button onclick="${editing ? `saveEdit('${editing.id}')` : 'saveNew()'}" 
+                                    class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700">
+                                    ${editing ? 'Uppdatera' : 'Skapa'}
+                                </button>
+                                <button onclick="cancelEdit()" 
+                                    class="px-4 py-2 bg-gray-300 text-gray-700 rounded-lg hover:bg-gray-400">
+                                    Avbryt
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }
+            
+            function renderSignature(sig) {
+                const isActive = activeSignatureId === sig.id;
+                return `
+                    <div class="bg-white rounded-lg shadow-sm p-4 ${isActive ? 'border-2 border-green-500' : ''}">
+                        <div class="flex justify-between items-start mb-3">
+                            <div>
+                                <h3 class="font-semibold">
+                                    ${sig.name}
+                                    ${isActive ? '<span class="text-xs bg-green-600 text-white px-2 py-1 rounded ml-2">Aktiv</span>' : ''}
+                                </h3>
+                                <p class="text-xs text-gray-500">${new Date(sig.created).toLocaleDateString('sv-SE')}</p>
+                            </div>
+                            <div class="flex gap-2">
+                                <button onclick="startEdit('${sig.id}')" class="p-2 text-blue-600 hover:bg-blue-50 rounded">
+                                    ✏️
+                                </button>
+                                <button onclick="deleteSig('${sig.id}')" class="p-2 text-red-600 hover:bg-red-50 rounded">
+                                    🗑️
+                                </button>
+                            </div>
+                        </div>
+                        <div class="bg-gray-50 rounded p-3 mb-3 border text-sm">
+                            ${sig.content}
+                        </div>
+                        <button onclick="activate('${sig.id}')" 
+                            ${isActive ? 'disabled' : ''}
+                            class="w-full px-4 py-2 rounded-lg ${isActive ? 'bg-gray-200 text-gray-500' : 'bg-blue-600 text-white hover:bg-blue-700'}">
+                            ${isActive ? 'Redan aktiv' : 'Aktivera signatur'}
+                        </button>
+                    </div>
+                `;
+            }
+            
+            // Globala funktioner
+            window.toggleCreate = () => {
+                showCreate = !showCreate;
+                editingId = null;
+                render();
+            };
+            
+            window.saveNew = () => {
+                const name = document.getElementById('sigName').value.trim();
+                const content = document.getElementById('sigContent').value.trim();
+                if (!name || !content) {
+                    alert('Fyll i både namn och innehåll');
+                    return;
+                }
+                createSignature(name, content);
+            };
+            
+            window.startEdit = (id) => {
+                editingId = id;
+                showCreate = false;
+                render();
+            };
+            
+            window.saveEdit = (id) => {
+                const name = document.getElementById('sigName').value.trim();
+                const content = document.getElementById('sigContent').value.trim();
+                if (!name || !content) {
+                    alert('Fyll i både namn och innehåll');
+                    return;
+                }
+                updateSignature(id, name, content);
+            };
+            
+            window.cancelEdit = () => {
+                editingId = null;
+                showCreate = false;
+                render();
+            };
+            
+            window.deleteSig = deleteSignature;
+            window.activate = activateSignature;
+            
+            // Ladda och visa
+            loadSignatures();
+        }
+    </script>
+</body>
+</html>
