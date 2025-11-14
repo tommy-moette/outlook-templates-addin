@@ -1,0 +1,25 @@
+{
+  "name": "outlook-signature-addin",
+  "version": "1.0.0",
+  "description": "Outlook add-in för signaturhantering",
+  "main": "taskpane.html",
+  "scripts": {
+    "start": "office-addin-debugging start manifest.xml desktop",
+    "stop": "office-addin-debugging stop manifest.xml",
+    "validate": "office-addin-manifest validate manifest.xml",
+    "dev": "npx http-server -p 3000 --ssl --cert cert.pem --key key.pem"
+  },
+  "keywords": [
+    "outlook",
+    "office-add-in",
+    "signature"
+  ],
+  "author": "Ditt Företag",
+  "license": "MIT",
+  "devDependencies": {
+    "office-addin-cli": "^1.5.6",
+    "office-addin-debugging": "^5.0.12",
+    "office-addin-dev-certs": "^1.11.3",
+    "http-server": "^14.1.1"
+  }
+}
